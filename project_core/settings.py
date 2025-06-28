@@ -16,7 +16,7 @@ if os.environ.get('GAE_ENV', '').startswith('standard'):
             'ENGINE': 'django.db.backends.postgresql',
             'HOST': '/cloudsql/financialhub-464311:us-central1:my-db-instance',
             'USER': 'postgres',
-            'PASSWORD': 'PASTE_YOUR_DATABASE_PASSWORD_HERE',
+            'PASSWORD': 'a7b9c2d8e1f0g9h8i7j6k5l4m3n2o1p',
             'NAME': 'postgres',
         }
     }
