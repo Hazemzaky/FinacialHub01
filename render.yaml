@@ -1,0 +1,24 @@
+services:
+  - type: postgres
+    name: my-accounting-db
+    plan: free
+    postgresmajorVersion: "14"
+  - type: web
+    name: my-accounting-app
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn project_core.wsgi:application" # <-- CHANGE 'project_core' IF YOU CHOOSE A DIFFERENT NAME
+    healthCheckPath: /api/login/
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: postgres
+          name: my-accounting-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: PYTHON_VERSION
+        value: 3.11.4
