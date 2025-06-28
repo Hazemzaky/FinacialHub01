@@ -1,11 +1,16 @@
-services:
-  # The Database Service
-  - type: psql # <-- FIX: The type was "postgres", it should be "psql"
-    name: my-accounting-db
-    plan: free
-    postgresmajorVersion: "14"
+# ======================================================
+# The Correct render.yaml for a Django Application
+# ======================================================
 
-  # The Web Service (Our Django App)
+# 1. Define the Database first, under its own top-level key
+databases:
+  - name: my-accounting-db
+    plan: free
+    databaseName: myaccountingdb # The actual name for the database
+    user: myuser         # The user for the database
+
+# 2. Define the Web Service second, under its own top-level key
+services:
   - type: web
     name: my-accounting-app
     env: python
@@ -15,8 +20,7 @@ services:
     healthCheckPath: /api/login/
     envVars:
       - key: DATABASE_URL
-        fromService:
-          type: psql # <-- This should also be updated to match
+        fromDatabase: # <-- This key correctly links to the database block above
           name: my-accounting-db
           property: connectionString
       - key: SECRET_KEY
