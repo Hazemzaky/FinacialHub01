@@ -1,19 +1,22 @@
 services:
-  - type: postgres
+  # The Database Service
+  - type: psql # <-- FIX: The type was "postgres", it should be "psql"
     name: my-accounting-db
     plan: free
     postgresmajorVersion: "14"
+
+  # The Web Service (Our Django App)
   - type: web
     name: my-accounting-app
     env: python
     plan: free
     buildCommand: "./build.sh"
-    startCommand: "gunicorn project_core.wsgi:application" # <-- CHANGE 'project_core' IF YOU CHOOSE A DIFFERENT NAME
+    startCommand: "gunicorn project_core.wsgi:application"
     healthCheckPath: /api/login/
     envVars:
       - key: DATABASE_URL
         fromService:
-          type: postgres
+          type: psql # <-- This should also be updated to match
           name: my-accounting-db
           property: connectionString
       - key: SECRET_KEY
