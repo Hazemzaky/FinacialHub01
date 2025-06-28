@@ -1,6 +1,5 @@
 Django
 djangorestframework
-djangorestframework-authtoken
 django-cors-headers
 gunicorn
 psycopg2-binary
