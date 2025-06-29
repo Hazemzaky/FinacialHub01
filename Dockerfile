@@ -1,31 +1,30 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# Final, Corrected Dockerfile
 
-# Set environment variables
+# Stage 1: Use an official Python runtime
+FROM python:3.11-slim-bookworm
+
+# Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-# Set Django superuser credentials from build arguments
-ARG DJANGO_SUPERUSER_USERNAME
-ARG DJANGO_SUPERUSER_EMAIL
-ARG DJANGO_SUPERUSER_PASSWORD
 
-# Set work directory
+# Set the working directory in the container
 WORKDIR /code
 
-# Install dependencies
+# Install system dependencies that might be needed
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
 COPY requirements.txt /code/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project
-COPY . .
+# Copy the rest of the application code
+COPY . /code/
 
-# Run database migrations and create superuser during the build
-# This is our last attempt at this method.
-RUN python manage.py migrate --noinput
-RUN python manage.py createsuperuser --noinput || echo "Superuser already exists."
+# Make the entrypoint script executable
+RUN chmod +x /code/entrypoint.sh
 
-# Expose port 8080
-EXPOSE 8080
-
-# The command to run when the container starts
-CMD ["gunicorn", "--bind", ":8080", "--workers", "1", "--threads", "8", "--timeout", "0", "project_core.wsgi:application"]
+# Set the entrypoint script as the startup command
+ENTRYPOINT ["/code/entrypoint.sh"]
