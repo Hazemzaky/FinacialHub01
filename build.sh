@@ -9,9 +9,9 @@ pip install -r requirements.txt
 python manage.py makemigrations api
 python manage.py migrate
 
-# Create a superuser automatically
-echo "Creating superuser..."
-echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword')" | python manage.py shell
+# Create a superuser using environment variables (if they exist)
+# This is the official, non-interactive method.
+python manage.py createsuperuser --noinput || echo "Superuser already exists, skipping."
 
 # Collect static files
 python manage.py collectstatic --no-input
