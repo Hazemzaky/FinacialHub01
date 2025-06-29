@@ -85,7 +85,7 @@ if os.environ.get('K_SERVICE'):
             'ENGINE': 'django.db.backends.postgresql',
             'HOST': '/cloudsql/financialhub-464311:us-central1:my-db-instance',
             'USER': 'postgres',
-            'PASSWORD': 'PASTE_YOUR_DATABASE_PASSWORD_HERE',
+            'PASSWORD': 'TheUltimateFinalPassword123',
             'NAME': 'postgres',
         }
     }
