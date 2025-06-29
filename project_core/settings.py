@@ -121,14 +121,22 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+# settings.py at the bottom
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = '/static/'
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STORAGES = {
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
-    }
+
+# This is the directory where collectstatic will gather all static files
+# for WhiteNoise to serve in production.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# This line enables WhiteNoise's highly-efficient storage backend.
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
