@@ -1,0 +1,1 @@
+web: python manage.py migrate && python manage.py createsuperuser --noinput || echo 'Skipping superuser creation' && gunicorn project_core.wsgi:application --bind 0.0.0.0:$PORT
