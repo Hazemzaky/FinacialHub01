@@ -74,12 +74,12 @@ WSGI_APPLICATION = 'project_core.wsgi.application'
 # settings.py
 
 # ==============================================================================
-# FINAL, CORRECTED DATABASE CONFIGURATION
+# FINAL AND CORRECT DATABASE CONFIGURATION
 # ==============================================================================
 
-# This uses K_SERVICE, which is automatically set in Cloud Run environments
+# This new logic handles all three cases: Cloud Run, Cloud Shell, and Local
 if os.environ.get('K_SERVICE'):
-    # This block will now run correctly on Google Cloud Run
+    # --- Case 1: Running on the live Cloud Run service ---
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -89,8 +89,13 @@ if os.environ.get('K_SERVICE'):
             'NAME': 'postgres',
         }
     }
+elif os.environ.get('DATABASE_URL'):
+    # --- Case 2: Running in Cloud Shell (or another environment with DATABASE_URL) ---
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600)
+    }
 else:
-    # This block is for local development (falls back to sqlite)
+    # --- Case 3: Running locally for development ---
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
