@@ -71,15 +71,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project_core.wsgi.application'
 
 
-# Database Configuration (Correctly Indented)
-if os.environ.get('GAE_ENV', '').startswith('standard'):
-    # This block is for Cloud Run
+# settings.py
+
+# ==============================================================================
+# FINAL, CORRECTED DATABASE CONFIGURATION
+# ==============================================================================
+
+# This uses K_SERVICE, which is automatically set in Cloud Run environments
+if os.environ.get('K_SERVICE'):
+    # This block will now run correctly on Google Cloud Run
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'HOST': '/cloudsql/financialhub-464311:us-central1:my-db-instance',
             'USER': 'postgres',
-            'PASSWORD': 'a7b9c2d8e1f0g9h8i7j6k5l4m3n2o1p',
+            'PASSWORD': 'PASTE_YOUR_DATABASE_PASSWORD_HERE',
             'NAME': 'postgres',
         }
     }
