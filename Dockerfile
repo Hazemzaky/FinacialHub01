@@ -12,12 +12,15 @@ WORKDIR /code
 COPY requirements.txt /code/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy the entire project
 COPY . /code/
+
+# Copy the entrypoint script and make it executable
+COPY entrypoint.sh /code/entrypoint.sh
+RUN chmod +x /code/entrypoint.sh
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Run the application using gunicorn
-# Cloud Run automatically sets the PORT environment variable.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 project_core.wsgi:application
+# Set the entrypoint script as the startup command for the container
+ENTRYPOINT ["/code/entrypoint.sh"]
