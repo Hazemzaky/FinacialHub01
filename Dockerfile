@@ -17,7 +17,7 @@ COPY . .
 
 # Make the entrypoint script executable using its full path
 RUN chmod +x /code/entrypoint.sh
-
+    
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
