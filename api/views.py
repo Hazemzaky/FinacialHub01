@@ -1,7 +1,9 @@
+# api/views.py --- COMPLETE AND CORRECTED
 import datetime
 from decimal import Decimal
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model # <--- I have added get_user_model here
 from django.db.models import Sum
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -39,21 +41,13 @@ class DashboardSummaryView(APIView):
         summary_data = {'fiscal_year': f"{fiscal_year_start.year}-{fiscal_year_start.year + 1}", 'total_revenue': total_revenue, 'total_expenses': total_expenses, 'net_profit': net_profit}
         return Response(summary_data, status=status.HTTP_200_OK)
 
-
-
-# Add this entire new class to the bottom of the file
-from django.http import JsonResponse
-
 class DebugDBView(APIView):
-    permission_classes = [AllowAny] # Make it public for this test
-
+    permission_classes = [AllowAny]
     def get(self, request, *args, **kwargs):
         User = get_user_model()
         all_users = User.objects.all()
         usernames = [user.username for user in all_users]
         user_count = len(usernames)
-
-        # This will return a JSON response with the list of users
         return JsonResponse({
             "message": "Debug view successfully connected to the database.",
             "user_count": user_count,
