@@ -8,19 +8,22 @@ ENV PYTHONUNBUFFERED 1
 # Set work directory
 WORKDIR /code
 
-# Install dependencies
+# First, copy the requirements file and install dependencies
 COPY requirements.txt /code/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project
+# Next, copy the entrypoint script
+COPY entrypoint.sh /code/entrypoint.sh
+
+# Now, copy the rest of the project code
 COPY . /code/
 
-# Copy the entrypoint script and make it executable
-COPY entrypoint.sh /code/entrypoint.sh
-RUN chmod +x /code/entrypoint.sh
+# Finally, make the entrypoint script executable
+# This is a more robust way to set permissions
+RUN chmod +x ./entrypoint.sh
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Set the entrypoint script as the startup command for the container
-ENTRYPOINT ["/code/entrypoint.sh"]
+# Set the entrypoint script as the startup command
+ENTRYPOINT ["./entrypoint.sh"]
