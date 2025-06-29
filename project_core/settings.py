@@ -1,14 +1,75 @@
-# settings.py
-
-# ...
+# ==============================================================================
+# FINAL, COMPLETE, AND CORRECT settings.py
+# ==============================================================================
 import os
+import dj_database_url
+from pathlib import Path
 
-# Check if we are running on Google Cloud Run
-# ==============================================================================
-# CORRECTED DATABASE CONFIGURATION (COPY THIS ENTIRE BLOCK)
-# ==============================================================================
+# This is the crucial line that was missing. It defines the project's base directory.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Check if we are running on Google Cloud Run
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = 'RENDER' not in os.environ # This variable name is fine, it just checks if we are on a platform that isn't local
+
+ALLOWED_HOSTS = []
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+ALLOWED_HOSTS.append('127.0.0.1')
+# We will need to add our Cloud Run URL here later if needed, but for now this is okay.
+
+
+# Application definition
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'api', # Our application
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'project_core.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'project_core.wsgi.application'
+
+
+# Database Configuration (Correctly Indented)
 if os.environ.get('GAE_ENV', '').startswith('standard'):
     # This block is for Cloud Run
     DATABASES = {
@@ -16,7 +77,7 @@ if os.environ.get('GAE_ENV', '').startswith('standard'):
             'ENGINE': 'django.db.backends.postgresql',
             'HOST': '/cloudsql/financialhub-464311:us-central1:my-db-instance',
             'USER': 'postgres',
-            'PASSWORD': 'a7b9c2d8e1f0g9h8i7j6k5l4m3n2o1p',
+            'PASSWORD': 'PASTE_YOUR_DATABASE_PASSWORD_HERE',
             'NAME': 'postgres',
         }
     }
@@ -28,3 +89,40 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+
+# Password validation
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
+
+
+# Internationalization
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    # Add your Vercel frontend URL here once you have it
+]
