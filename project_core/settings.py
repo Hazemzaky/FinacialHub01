@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ # This variable name is fine, it just checks if we are on a platform that isn't local
+DEBUG = 'K_SERVICE' not in os.environ
 
 # settings.py
 
@@ -139,4 +139,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'https://finacial-hub01front.vercel.app', 
     
+]
+# --- Production Security Settings ---
+# Add your live URL to the list of trusted origins for CSRF protection
+CSRF_TRUSTED_ORIGINS = [
+    'https://my-accounting-app-267387038527.us-central1.run.app',
 ]
