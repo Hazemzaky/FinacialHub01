@@ -14,11 +14,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ # This variable name is fine, it just checks if we are on a platform that isn't local
 
-ALLOWED_HOSTS = []
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-ALLOWED_HOSTS.append('127.0.0.1')
+# settings.py
+
+# List of host/domain names that this Django site can serve.
+ALLOWED_HOSTS = [
+    'my-accounting-app-267387038527.us-central1.run.app', # Your live URL
+    '127.0.0.1', # For local development
+]
 # We will need to add our Cloud Run URL here later if needed, but for now this is okay.
 
 
