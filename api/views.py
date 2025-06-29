@@ -38,3 +38,24 @@ class DashboardSummaryView(APIView):
         net_profit = total_revenue - total_expenses
         summary_data = {'fiscal_year': f"{fiscal_year_start.year}-{fiscal_year_start.year + 1}", 'total_revenue': total_revenue, 'total_expenses': total_expenses, 'net_profit': net_profit}
         return Response(summary_data, status=status.HTTP_200_OK)
+
+
+
+# Add this entire new class to the bottom of the file
+from django.http import JsonResponse
+
+class DebugDBView(APIView):
+    permission_classes = [AllowAny] # Make it public for this test
+
+    def get(self, request, *args, **kwargs):
+        User = get_user_model()
+        all_users = User.objects.all()
+        usernames = [user.username for user in all_users]
+        user_count = len(usernames)
+
+        # This will return a JSON response with the list of users
+        return JsonResponse({
+            "message": "Debug view successfully connected to the database.",
+            "user_count": user_count,
+            "usernames_in_database": usernames
+        })
