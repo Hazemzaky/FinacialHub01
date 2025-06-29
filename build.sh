@@ -5,11 +5,13 @@ set -o errexit
 # Install dependencies
 pip install -r requirements.txt
 
-# STEP 1: Create the migration files for our 'api' app
+# Create and apply database migrations
 python manage.py makemigrations api
-
-# STEP 2: Apply those migrations to build the tables in the database
 python manage.py migrate
 
-# STEP 3: Collect static files
+# Create a superuser automatically
+echo "Creating superuser..."
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword')" | python manage.py shell
+
+# Collect static files
 python manage.py collectstatic --no-input
