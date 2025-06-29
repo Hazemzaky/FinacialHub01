@@ -12,18 +12,14 @@ WORKDIR /code
 COPY requirements.txt /code/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Next, copy the entrypoint script
-COPY entrypoint.sh /code/entrypoint.sh
+# Next, copy the rest of the project code into the work directory
+COPY . .
 
-# Now, copy the rest of the project code
-COPY . /code/
-
-# Finally, make the entrypoint script executable
-# This is a more robust way to set permissions
-RUN chmod +x ./entrypoint.sh
+# Make the entrypoint script executable using its full path
+RUN chmod +x /code/entrypoint.sh
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Set the entrypoint script as the startup command
-ENTRYPOINT ["./entrypoint.sh"]
+# Set the entrypoint script as the startup command for the container
+ENTRYPOINT ["/code/entrypoint.sh"]
